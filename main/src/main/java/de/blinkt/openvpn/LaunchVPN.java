@@ -170,6 +170,7 @@ public class LaunchVPN extends Activity {
 
                 });
         dialog.setNegativeButton(android.R.string.cancel,
+
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -178,9 +179,31 @@ public class LaunchVPN extends Activity {
                         finish();
                     }
                 });
+		dialog.create().show();
 
+	}
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+	super.onActivityResult(requestCode, resultCode, data);
+
+	if(requestCode==START_VPN_PROFILE) {
+	    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+	    boolean showLogWindow = prefs.getBoolean("showlogwindow", true);
+
+	    if(!mhideLog && showLogWindow)
+		showLogWindow();
+	    new startOpenVpnThread().start();
+	} else if (resultCode == Activity.RESULT_CANCELED) {
+	    // User does not want us to start, so we just vanish
+	    VpnStatus.updateStateString("USER_VPN_PERMISSION_CANCELLED", "", R.string.state_user_vpn_permission_cancelled,
+					ConnectionStatus.LEVEL_NOTCONNECTED);
+
+	    finish();
+	}
+    }
+
+    void showLogWindow() {
         dialog.create().show();
-
     }
 
     @Override

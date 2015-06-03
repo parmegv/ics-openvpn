@@ -56,8 +56,6 @@ import de.blinkt.openvpn.LaunchVPN;
 import de.blinkt.openvpn.R;
 import de.blinkt.openvpn.VpnProfile;
 import de.blinkt.openvpn.activities.DisconnectVPN;
-import de.blinkt.openvpn.activities.MainActivity;
-import de.blinkt.openvpn.activities.VPNPreferences;
 import de.blinkt.openvpn.core.OpenVPNManagement;
 import de.blinkt.openvpn.core.OpenVPNService;
 import de.blinkt.openvpn.core.ProfileManager;
@@ -68,6 +66,8 @@ import de.blinkt.openvpn.core.VpnStatus.LogListener;
 import de.blinkt.openvpn.core.VpnStatus.StateListener;
 
 import static de.blinkt.openvpn.core.OpenVPNService.humanReadableByteCount;
+
+import se.leap.bitmaskclient.Dashboard;
 
 public class LogFragment extends ListFragment implements StateListener, SeekBar.OnSeekBarChangeListener, RadioGroup.OnCheckedChangeListener, VpnStatus.ByteCountListener {
     private static final String LOGTIMEFORMAT = "logtimeformat";
@@ -429,34 +429,33 @@ public class LogFragment extends ListFragment implements StateListener, SeekBar.
             Intent intent = new Intent(getActivity(), DisconnectVPN.class);
             startActivity(intent);
             return true;
-        } else if (item.getItemId() == R.id.send) {
-            ladapter.shareLog();
-        } else if (item.getItemId() == R.id.edit_vpn) {
-            VpnProfile lastConnectedprofile = ProfileManager.getLastConnectedVpn();
+        } else if(item.getItemId()==R.id.send) {
+			ladapter.shareLog();
+	} else if(item.getItemId()==R.id.edit_vpn) {
+	    VpnProfile lastConnectedprofile = ProfileManager.getLastConnectedVpn();
 
-            if (lastConnectedprofile != null) {
-                Intent vprefintent = new Intent(getActivity(), VPNPreferences.class)
-                        .putExtra(VpnProfile.EXTRA_PROFILEUUID, lastConnectedprofile.getUUIDString());
-                startActivityForResult(vprefintent, START_VPN_CONFIG);
-            } else {
-                Toast.makeText(getActivity(), R.string.log_no_last_vpn, Toast.LENGTH_LONG).show();
-            }
-        } else if (item.getItemId() == R.id.toggle_time) {
-            showHideOptionsPanel();
-        } else if (item.getItemId() == android.R.id.home) {
-            // This is called when the Home (Up) button is pressed
-            // in the Action Bar.
-            Intent parentActivityIntent = new Intent(getActivity(), MainActivity.class);
-            parentActivityIntent.addFlags(
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                            Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(parentActivityIntent);
-            getActivity().finish();
-            return true;
+	    if(lastConnectedprofile!=null) {
+		Intent vprefintent = new Intent(getActivity(),Dashboard.class)
+		    .putExtra(VpnProfile.EXTRA_PROFILEUUID,lastConnectedprofile.getUUIDString());
+		startActivityForResult(vprefintent,START_VPN_CONFIG);
+	    } else {
+		Toast.makeText(getActivity(), R.string.log_no_last_vpn, Toast.LENGTH_LONG).show();
+	    }
+	} else if(item.getItemId() == R.id.toggle_time) {
+	    showHideOptionsPanel();
+	} else if(item.getItemId() == android.R.id.home) {
+	    // This is called when the Home (Up) button is pressed
+	    // in the Action Bar.
+	    Intent parentActivityIntent = new Intent(getActivity(), Dashboard.class);
+	    parentActivityIntent.addFlags(
+					  Intent.FLAG_ACTIVITY_CLEAR_TOP |
+					  Intent.FLAG_ACTIVITY_NEW_TASK);
+	    startActivity(parentActivityIntent);
+	    getActivity().finish();
+	    return true;
 
-        }
-        return super.onOptionsItemSelected(item);
-
+	}
+	return super.onOptionsItemSelected(item);
     }
 
     private void showHideOptionsPanel() {
