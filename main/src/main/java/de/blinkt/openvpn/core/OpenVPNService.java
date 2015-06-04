@@ -185,7 +185,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
 
         mNotificationManager.notify(OPENVPN_STATUS, notification);
-        startForeground(OPENVPN_STATUS, notification);
+        // startForeground(OPENVPN_STATUS, notification);
 
         // Check if running on a TV
         if (runningOnAndroidTV() && !lowpriority)
@@ -937,6 +937,10 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
                 mConnecttime = System.currentTimeMillis();
                 if (!runningOnAndroidTV())
                     lowpriority = true;
+
+		String ns = Context.NOTIFICATION_SERVICE;
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+		mNotificationManager.cancel(OPENVPN_STATUS);
             } else {
                 mDisplayBytecount = false;
             }
@@ -946,8 +950,8 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
             // CONNECTED
             // Does not work :(
             String msg = getString(resid);
-            showNotification(VpnStatus.getLastCleanLogMessage(this),
-                    msg, lowpriority, 0, level);
+            // showNotification(VpnStatus.getLastCleanLogMessage(this),
+            //      msg, lowpriority, 0, level);
 
         }
     }
@@ -970,7 +974,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
                     humanReadableByteCount(diffOut / OpenVPNManagement.mBytecountInterval, true));
 
             boolean lowpriority = !mNotificationAlwaysVisible;
-            showNotification(netstat, null, lowpriority, mConnecttime, LEVEL_CONNECTED);
+            //showNotification(netstat, null, lowpriority, mConnecttime, LEVEL_CONNECTED);
         }
 
     }
