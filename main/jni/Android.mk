@@ -65,8 +65,13 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_LDLIBS := -lz  -lc 
 LOCAL_SHARED_LIBRARIES := libssl libcrypto openvpn
+
 LOCAL_SRC_FILES:= minivpn.c dummy.cpp
 LOCAL_MODULE = nopie_openvpn
+# =======
+# LOCAL_SRC_FILES:= # minivpn.c dummy.cpp
+# LOCAL_MODULE = nopievpn
+# >>>>>>> minivpn.c and dummy.cpp introduce randomness into nopievpn
 include $(BUILD_EXECUTABLE)
 
 
@@ -78,5 +83,9 @@ LOCAL_LDFLAGS = -fPIE -pie
 LOCAL_SHARED_LIBRARIES := libssl libcrypto openvpn
 LOCAL_SRC_FILES:= minivpn.c dummy.cpp
 LOCAL_MODULE = pie_openvpn
+# =======
+# LOCAL_SRC_FILES:= # minivpn.c dummy.cpp
+# LOCAL_MODULE = pievpn
+# >>>>>>> minivpn.c and dummy.cpp introduce randomness into nopievpn
 include $(BUILD_EXECUTABLE)
 
